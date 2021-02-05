@@ -12,3 +12,6 @@ resources:
   - configMap-vh.yaml
   - service-nginx.yaml
   - route.yaml
+
+patchesStrategicMerge:
+- route.yaml
