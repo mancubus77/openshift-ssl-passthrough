@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  # Nginx
+  - deployment-nginx.yaml
+  - configMap-crt.yaml
+  - configMap-key.yaml
+  - configMap-nginx.yaml
+  - configMap-vh.yaml
+  - service-nginx.yaml
+  - route.yaml
+
+patchesStrategicMerge:
+- route.yaml

@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: nginx
+spec:
+  host: nginx-ssl.apps.ocp1.asm.optusnet.com.au
+  # path: /
+  to:
+    kind: Service
+    name: nginx
+  port:
+    targetPort: 8443
+  tls:
+    termination: passthrough

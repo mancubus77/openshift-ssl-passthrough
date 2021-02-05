@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: nginx-ssl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+          - name: nginx-config-volume
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+          - name: ssl-server
+            mountPath: /etc/nginx/conf.d/ssl-server.conf
+            subPath: ssl-server.conf
+
+          - name: nginx-selfsigned-crt
+            mountPath: /etc/nginx/certs/nginx-selfsigned.crt
+            subPath: nginx-selfsigned.crt
+
+          - name: nginx-selfsigned-key
+            mountPath: /etc/nginx/certs/nginx-selfsigned.key
+            subPath: nginx-selfsigned.key
+
+
+          - mountPath: /var/log/nginx
+            name: log
+          - name: cache
+            mountPath: /var/cache/nginx
+          - name: pid
+            mountPath: /var/run/
+            subPath: nginx.pid
+        ports:
+          - containerPort: 8443
+        resources:
+          limits:
+            memory: 64Mi
+            cpu: 250m
+          # requests:
+          #   memory: 256Mi
+          #   cpu: 250m            
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-conf
+        - name: ssl-server
+          configMap:
+            name: ssl-server
+        - name: nginx-selfsigned-crt
+          configMap:
+            name: nginx-selfsigned-crt
+        - name: nginx-selfsigned-key
+          configMap:
+            name: nginx-selfsigned-key
+        - name: log
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+        - name: pid
+          emptyDir: {}

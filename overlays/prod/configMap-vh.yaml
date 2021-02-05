@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ssl-server
+data:
+  ssl-server.conf: |
+    server {
+            server_name nginx-ssl.apps.ocp1.asm.optusnet.com.au;
+            location / {
+                    proxy_pass http://hello-kubernetes:80;
+            }
+
+        listen 8443 ssl default_server;
+        ssl_protocols TLSv1.1;
+        ssl_certificate certs/nginx-selfsigned.crt;
+        ssl_certificate_key certs/nginx-selfsigned.key;
+    }
